@@ -32,6 +32,7 @@ declare global {
         headerColor: string;
         backgroundColor: string;
         isClosingConfirmationEnabled: boolean;
+
         BackButton: {
           isVisible: boolean;
           onClick: (callback: () => void) => void;
@@ -39,6 +40,7 @@ declare global {
           show: () => void;
           hide: () => void;
         };
+
         MainButton: {
           text: string;
           color: string;
@@ -63,39 +65,49 @@ declare global {
             is_visible?: boolean;
           }) => void;
         };
+
         HapticFeedback: {
           impactOccurred: (style: 'light' | 'medium' | 'heavy' | 'rigid' | 'soft') => void;
           notificationOccurred: (type: 'error' | 'success' | 'warning') => void;
           selectionChanged: () => void;
         };
+
+        // Core actions (single declaration)
         ready: () => void;
         expand: () => void;
         close: () => void;
+
+        // Data & links
         sendData: (data: string) => void;
         openLink: (url: string, options?: { try_instant_view?: boolean }) => void;
         openTelegramLink: (url: string) => void;
         openInvoice: (url: string, callback?: (status: string) => void) => void;
-        showPopup: (params: {
-          title?: string;
-          message: string;
-          buttons?: Array<{
-            id?: string;
-            type?: 'default' | 'ok' | 'close' | 'cancel' | 'destructive';
-            text?: string;
-          }>;
-        }, callback?: (id: string) => void) => void;
+
+        // UI helpers
+        showPopup: (
+          params: {
+            title?: string;
+            message: string;
+            buttons?: Array<{
+              id?: string;
+              type?: 'default' | 'ok' | 'close' | 'cancel' | 'destructive';
+              text?: string;
+            }>;
+          },
+          callback?: (id: string) => void
+        ) => void;
+
         showAlert: (message: string, callback?: () => void) => void;
         showConfirm: (message: string, callback?: (confirmed: boolean) => void) => void;
-        showScanQrPopup: (params: {
-          text?: string;
-        }, callback?: (data: string) => void) => void;
+
+        // QR & clipboard
+        showScanQrPopup: (params: { text?: string }, callback?: (data: string) => void) => void;
         closeScanQrPopup: () => void;
         readTextFromClipboard: (callback?: (text: string) => void) => void;
+
+        // Permissions
         requestWriteAccess: (callback?: (granted: boolean) => void) => void;
         requestContact: (callback?: (granted: boolean) => void) => void;
-        ready: () => void;
-        expand: () => void;
-        close: () => void;
       };
     };
   }
@@ -119,7 +131,7 @@ export const initTelegramWebApp = () => {
     if (webApp) {
       webApp.ready();
       webApp.expand();
-      
+
       // Настроить тему
       if (webApp.themeParams.bg_color) {
         document.documentElement.style.setProperty('--tg-theme-bg-color', webApp.themeParams.bg_color);
@@ -127,7 +139,7 @@ export const initTelegramWebApp = () => {
       if (webApp.themeParams.text_color) {
         document.documentElement.style.setProperty('--tg-theme-text-color', webApp.themeParams.text_color);
       }
-      
+
       return webApp;
     }
   }
