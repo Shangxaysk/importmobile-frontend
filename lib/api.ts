@@ -1,8 +1,7 @@
 import axios from 'axios';
 
+// API URL: Vercel environment variable yoki lokal test uchun
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
-
 
 const api = axios.create({
   baseURL: API_URL,
@@ -11,7 +10,7 @@ const api = axios.create({
   },
 });
 
-// Добавить токен к запросам
+// Token qo‘shish (agar mavjud bo‘lsa)
 api.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('token');
@@ -22,9 +21,10 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Products
+
+// -------------------- PRODUCTS --------------------
 export const getProducts = async () => {
-  const { data } = await api.get('/api/products');
+  const { data } = await api.get('/api/products'); // ✅ Backend route bilan mos
   return data;
 };
 
@@ -33,7 +33,23 @@ export const getProduct = async (id: string) => {
   return data;
 };
 
-// Auth
+export const createProduct = async (productData: any) => {
+  const { data } = await api.post('/api/products', productData);
+  return data;
+};
+
+export const updateProduct = async (id: string, productData: any) => {
+  const { data } = await api.put(`/api/products/${id}`, productData);
+  return data;
+};
+
+export const deleteProduct = async (id: string) => {
+  const { data } = await api.delete(`/api/products/${id}`);
+  return data;
+};
+
+
+// -------------------- AUTH --------------------
 export const register = async (phone: string, password: string) => {
   const { data } = await api.post('/api/auth/register', { phone, password });
   return data;
@@ -49,7 +65,8 @@ export const getMe = async () => {
   return data;
 };
 
-// Cart (localStorage)
+
+// -------------------- CART (localStorage) --------------------
 export const getCart = () => {
   if (typeof window === 'undefined') return [];
   const cart = localStorage.getItem('cart');
@@ -97,7 +114,8 @@ export const clearCart = () => {
   localStorage.removeItem('cart');
 };
 
-// Orders
+
+// -------------------- ORDERS --------------------
 export const createOrder = async (orderData: any) => {
   const { data } = await api.post('/api/orders', orderData);
   return data;
@@ -108,7 +126,8 @@ export const getMyOrders = async () => {
   return data;
 };
 
-// News
+
+// -------------------- NEWS --------------------
 export const getNews = async () => {
   const { data } = await api.get('/api/news');
   return data;
@@ -119,7 +138,8 @@ export const getNewsItem = async (id: string) => {
   return data;
 };
 
-// Upload
+
+// -------------------- UPLOAD --------------------
 export const uploadFile = async (file: File) => {
   const formData = new FormData();
   formData.append('screenshot', file);
@@ -132,7 +152,8 @@ export const uploadFile = async (file: File) => {
   return data;
 };
 
-// Admin
+
+// -------------------- ADMIN --------------------
 export const getAllOrders = async () => {
   const { data } = await api.get('/api/orders');
   return data;
@@ -152,5 +173,6 @@ export const addPassportData = async (orderId: string, passportData: string) => 
   const { data } = await api.patch(`/api/orders/${orderId}/passport`, { passportData });
   return data;
 };
+
 
 export default api;
