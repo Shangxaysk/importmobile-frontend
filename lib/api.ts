@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL 
-  || 'https://importmobile-backend-production.up.railway.app';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
 
 
 const api = axios.create({
